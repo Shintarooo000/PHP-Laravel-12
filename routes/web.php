@@ -23,7 +23,8 @@ Route::get('/profile/create','Admin\ProfileController@add');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home', 'HomeController@index')->name('home');
+    
 
 Route::group(['prefix' => 'admin','middleware' => 'auth'],function(){
     Route::get('news/create', 'Admin\NewsController@add');
@@ -45,3 +46,6 @@ Route::group(['prefix' => 'admin'], function() {
     Route::get('profile', 'Admin\ProfileController@index')->middleware('auth'); // 追記
     Route::get('profile/delete', 'Admin\ProfileController@delete')->middleware('auth');
 });
+
+Route::get('/', 'NewsController@index');
+Route::get('/profile', 'ProfileController@index');
