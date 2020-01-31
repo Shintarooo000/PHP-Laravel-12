@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 use App\Profiles;
+use App\History;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -17,13 +17,13 @@ class ProfileController extends Controller
             
             $this->validate($request, Profiles::$rules);
             
-            $profile = new Profiles;
+            $profiles = new Profiles;
             $form = $request->all();
             
             unset($form['_token']);
             
-            $profile->fill($form);
-            $profile->save();
+            $profiles->fill($form);
+            $profiles->save();
             return redirect('/admin/profile/create');
         }
          public function index(Request $request)
@@ -44,20 +44,27 @@ class ProfileController extends Controller
             if (empty($profiles)) {
                 abort(404);
             }
-            return view('/admin.profile.edit');
+            return view('/admin.profile.edit',['profiles_form' => $profiles]);
         }
         public function update(Request $request){
             $this->validate($request, Profiles::$rules);
             $profiles = Profiles::find($request->id);
-            $profile_form = $request->all();
+            $profiles_form = $request->all();
             unset($profiles_form['_token']);
-            $profiles->fill($profiles_form)->save();
-            return redirect('admin/profile');
+            
+            $history = new History;
+            $history->profiles_id = $profiles->id;
+            $hisitory->edited_at = Carbon::now();
+            $history->save();
+            
+            return redirect('admin/profile/');
+            
         }
-    public function delete(Request $request){
-    $profiles = Profiles::find($request->id);
-    $profiles->delete();
-    return redirect('admin/profile/');
-  }
+        public function delete(Request $request){
+        $profiles = Profiles::find($request->id);
+        $profiles->delete();
+        
+        return redirect('admin/profile/');
+      }
 }
 ?>

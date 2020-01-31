@@ -19,7 +19,6 @@ class NewsController extends Controller
       $this->validate($request, News::$rules);
       $news = new News;
       $form = $request->all();
-
       // formに画像があれば、保存する
       if (isset($form['image'])) {
         $path = $request->file('image')->store('public/image');
